@@ -48,6 +48,7 @@ const styles = (theme) => ({
 });
 
 function Home(props) {
+  // const navigate = useNavigate();
   const [state, setState] = useState({
     movieName: "",
     upcomingMovies: [],
@@ -71,8 +72,7 @@ function Home(props) {
     let upcomingMovies = state.upcomingMovies;
     upcomingMoviesList.forEach((movie) => upcomingMovies.push(movie));
     setState({ ...state, upcomingMovies: upcomingMovies });
-    console.log("Upcoming Movies: " + state.upcomingMovies.length);
-    console.log(state.upcomingMovies);
+
 
     //Get released movies
     const releasedMoviesRaw = await fetch(
@@ -80,13 +80,11 @@ function Home(props) {
       { method: "GET" }
     );
     const releasedMoviesData = await releasedMoviesRaw.json();
-    console.log("released: " + releasedMoviesData.results);
     const releasedMoviesList = releasedMoviesData.movies;
     let releasedMovies = state.releasedMovies;
     releasedMoviesList.forEach((movie) => releasedMovies.push(movie));
     setState({ ...state, releasedMovies: releasedMovies });
-    console.log("Released Movies: " + state.releasedMovies.length);
-    console.log(state.releasedMovies);
+
 
     //Get Genres
     const genresRaw = await fetch("http://localhost:8085/api/v1/genres", {
@@ -98,8 +96,7 @@ function Home(props) {
     let genres = state.genresList;
     genreList.forEach((genre) => genres.push(genre));
     setState({ ...state, genresList: genres });
-    console.log("Genres: " + state.genresList.length);
-    console.log(state.genresList);
+
 
     //Get artists
     const artistsRaw = await fetch(props.baseUrl + "artists", {
@@ -110,8 +107,7 @@ function Home(props) {
     let artists = state.artistsList;
     artistsList.forEach((artist) => artists.push(artist));
     setState({ ...state, artistsList: artists });
-    console.log("Artist List: " + state.artistsList.length);
-    console.log(state.artistsList);
+
   }
   const movieNameChangeHandler = (event) => {
     setState({ ...state, movieName: event.target.value });
@@ -143,7 +139,7 @@ function Home(props) {
       queryString += "&title=" + state.movieName;
     }
     if (state.genres.length > 0) {
-      queryString += "&genres=" + state.genres.toString();
+      queryString += "&genre=" + state.genres.toString();
     }
     if (state.artists.length > 0) {
       queryString += "&artists=" + state.artists.toString();
@@ -162,8 +158,7 @@ function Home(props) {
     const filterData = await filterRaw.json();
     const filteredMovies = filterData.movies;
     setState({ ...state, releasedMovies: filteredMovies });
-    console.log("Filtered Movies: " + state.releasedMovies.length);
-    console.log(state.releasedMovies);
+
   }
   useEffect(() => {
     loadData();
@@ -173,7 +168,10 @@ function Home(props) {
 
   return (
     <div>
-      <Header baseUrl={props.baseUrl} />
+      <Header
+        baseUrl={props.baseUrl}
+        modalStateValues={props.modalStateValues}
+      />
 
       <div className={classes.upcomingMoviesHeading}>
         <span>Upcoming Movies</span>
@@ -199,6 +197,7 @@ function Home(props) {
               <GridListTile
                 className="released-movie-grid-item"
                 key={"grid" + movie.id}
+                onClick={() => movieClickHandler(movie.id)}
               >
                 <img
                   src={movie.poster_url}
