@@ -1,9 +1,8 @@
 import React from 'react';
 
-function Details() {
+function Details(props) {
     return (
-        <div>
-        </div>
+        <div>{props.match.params.id}</div>
     );
 }
 
