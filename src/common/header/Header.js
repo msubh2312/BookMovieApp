@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import "./Header.css";
 import logo from "../../assets/logo.svg";
 import Button from "@material-ui/core/Button";
@@ -72,9 +72,11 @@ function Header(props) {
 
   //function to handle login
   const loginClickHandler = async () => {
-    state.username===""?  setUsernameRequired("dispBlock"):setUsernameRequired("dispNone");
-    state.loginPassword===""?  setLoginPasswordRequired("dispBlock"):setLoginPasswordRequired("dispNone");
 
+    if(state.username ===""||state.loginPassword === ""){
+      state.username===""?  setUsernameRequired("dispBlock"):setUsernameRequired("dispNone");
+      state.loginPassword===""?  setLoginPasswordRequired("dispBlock"):setLoginPasswordRequired("dispNone");
+    }else{
       try {
 
         const loginDataRaw = await fetch(
@@ -100,7 +102,7 @@ function Header(props) {
         console.log(e);
 
       }
-    // }
+     }
 
   }
   //function to handle change in username
